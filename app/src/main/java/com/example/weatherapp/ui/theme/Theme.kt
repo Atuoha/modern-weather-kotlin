@@ -14,17 +14,18 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.example.weatherapp.utils.AppColors
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = AppColors.primaryColor,
+    secondary = AppColors.secondaryColor,
+    tertiary = AppColors.accentColor
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = AppColors.primaryColor,
+    secondary = AppColors.secondaryColor,
+    tertiary = AppColors.accentColor
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
