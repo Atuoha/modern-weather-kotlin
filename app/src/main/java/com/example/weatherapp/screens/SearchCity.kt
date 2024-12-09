@@ -3,6 +3,8 @@ package com.example.weatherapp.screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CloudDone
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -29,7 +31,7 @@ fun SearchCity() {
     return Scaffold(
         containerColor = Color.White,
         floatingActionButton = {
-            SearchCityFloatBTN(action = {})
+            SearchCityFloatBTN(action = {},icon = Icons.Rounded.CloudDone)
         },
         topBar = {
             SearchCityAppBar()
@@ -47,8 +49,8 @@ fun SearchCity() {
 
                 TextInputField(valueState = cityValue)
                 SearchCityContent(
-                    img = R.drawable.found,
-                    desc = "Search by entering the name of the city"
+                    img = R.drawable.not_found,
+                    desc = "Ops! City not found."
                 )
 
             }

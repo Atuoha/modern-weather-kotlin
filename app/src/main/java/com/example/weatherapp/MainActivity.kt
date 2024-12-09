@@ -6,8 +6,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.example.weatherapp.screens.AboutApp
 import com.example.weatherapp.screens.HomeScreen
+import com.example.weatherapp.screens.SavedCities
 import com.example.weatherapp.screens.SearchCity
+import com.example.weatherapp.screens.SettingsScreen
 import com.example.weatherapp.screens.SplashScreen
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import dagger.hilt.android.AndroidEntryPoint

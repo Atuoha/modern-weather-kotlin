@@ -1,5 +1,7 @@
 package com.example.weatherapp.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -12,12 +14,22 @@ import androidx.compose.ui.unit.sp
 import com.example.weatherapp.utils.AppColors
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Save
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,34 +39,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.weatherapp.widgets.SearchCityFloatBTN
+import com.example.weatherapp.components.CityListTile
+import com.example.weatherapp.components.ConfirmDeleteDialog
+import com.example.weatherapp.model.CityWeather
 
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen() {
-    val currentUnit = remember {
-        mutableStateOf("Celsius °C")
+fun SavedCities() {
+    val cities = listOf(
+        CityWeather(city = "New York", initial = "NY", weather = "Sunny"),
+        CityWeather(city = "Los Angeles", initial = "LA", weather = "Cloudy"),
+        CityWeather(city = "Chicago", initial = "CHI", weather = "Windy"),
+        CityWeather(city = "Houston", initial = "HOU", weather = "Rainy"),
+        CityWeather(city = "San Francisco", initial = "SF", weather = "Foggy")
+    )
+
+    val showDeleteDialog = remember {
+        mutableStateOf(false)
     }
 
-    val newUnit = remember {
-        mutableStateOf(currentUnit.value)
+    val cityToDelete = remember {
+        mutableStateOf<CityWeather?>(null)
     }
 
     return Scaffold(
         containerColor = Color.White,
-        floatingActionButton = {
-            if (currentUnit.value != newUnit.value) SearchCityFloatBTN(
-                action = {},
-                icon = Icons.Rounded.Save
-            )
-        },
+
         topBar = {
             TopAppBar(
-                title = { Text(text = "Settings") },
+                title = { Text(text = "Saved Cities") },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color.White),
                 navigationIcon = {
                     IconButton(onClick = { }) {
@@ -70,44 +88,35 @@ fun SettingsScreen() {
     ) { paddingValue ->
 
         Box(modifier = Modifier.padding(paddingValue)) {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .padding(
                         start = 18.dp,
                         end = 18.dp
                     )
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-
-                ) {
-
-                Text(
-                    text = "Click to change unit of measurement",
-                    style = TextStyle(
-                        color = AppColors.statsTitleColor,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 18.sp,
-                    )
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                Button(onClick = {
-                    if (newUnit.value == "Celsius °C") {
-                        newUnit.value = "Fahrenheit °F"
-                    } else {
-                        newUnit.value = "Celsius °C"
+            ) {
+                items(cities) { city ->
+                    CityListTile(city = city.city, initial = city.initial, weather = city.weather) {
+                        showDeleteDialog.value = true
+                        cityToDelete.value = city
                     }
-                }) {
-                    Text(
-                        text = newUnit.value,
-                        style = TextStyle(color = Color.White)
-                    )
-                }
 
+                }
             }
+
+
+
+        }
+        if (showDeleteDialog.value) {
+            ConfirmDeleteDialog(
+                showDeleteDialog,
+                cityToDelete,
+                deleteCity = {
+
+                }
+            )
         }
     }
 }
-
 
 

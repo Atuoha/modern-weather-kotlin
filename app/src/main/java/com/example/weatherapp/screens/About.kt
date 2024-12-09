@@ -16,45 +16,28 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Save
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.weatherapp.widgets.SearchCityFloatBTN
 
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen() {
-    val currentUnit = remember {
-        mutableStateOf("Celsius °C")
-    }
-
-    val newUnit = remember {
-        mutableStateOf(currentUnit.value)
-    }
-
+fun AboutApp() {
     return Scaffold(
         containerColor = Color.White,
-        floatingActionButton = {
-            if (currentUnit.value != newUnit.value) SearchCityFloatBTN(
-                action = {},
-                icon = Icons.Rounded.Save
-            )
-        },
+
         topBar = {
             TopAppBar(
-                title = { Text(text = "Settings") },
+                title = { Text(text = "About App") },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color.White),
                 navigationIcon = {
                     IconButton(onClick = { }) {
@@ -83,7 +66,7 @@ fun SettingsScreen() {
                 ) {
 
                 Text(
-                    text = "Click to change unit of measurement",
+                    text = "Weather App v1.0",
                     style = TextStyle(
                         color = AppColors.statsTitleColor,
                         fontWeight = FontWeight.Medium,
@@ -91,18 +74,15 @@ fun SettingsScreen() {
                     )
                 )
                 Spacer(modifier = Modifier.height(5.dp))
-                Button(onClick = {
-                    if (newUnit.value == "Celsius °C") {
-                        newUnit.value = "Fahrenheit °F"
-                    } else {
-                        newUnit.value = "Celsius °C"
-                    }
-                }) {
-                    Text(
-                        text = newUnit.value,
-                        style = TextStyle(color = Color.White)
+                Text(
+                    text = "App powered by OpenWeatherMapAPI: https://openweathermapapi.com",
+                    textAlign = TextAlign.Center,
+                    style = TextStyle(
+                        color = AppColors.greyShade,
+                        fontWeight = FontWeight.Light,
+                        fontSize = 16.sp,
                     )
-                }
+                )
 
             }
         }

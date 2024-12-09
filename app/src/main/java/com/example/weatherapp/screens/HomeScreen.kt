@@ -1,6 +1,7 @@
 package com.example.weatherapp.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,13 +12,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.LocationCity
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.Save
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,7 +39,10 @@ import com.example.weatherapp.components.Intervals
 import com.example.weatherapp.components.OverlaySection
 import com.example.weatherapp.components.Stats
 import com.example.weatherapp.components.WeatherCard
+import com.example.weatherapp.components.DpMenuItem
+
 import com.example.weatherapp.model.intervals
+import com.example.weatherapp.widgets.SearchCityFloatBTN
 
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,8 +51,15 @@ fun HomeScreen() {
     val intervalIndex = remember {
         mutableStateOf(0)
     }
+    val expanded = remember { mutableStateOf(false) }
 
     return Scaffold(
+        floatingActionButton = {
+            SearchCityFloatBTN(
+                action = {},
+                icon = Icons.Rounded.Save
+            )
+        },
         topBar = {
             TopAppBar(
                 title =
@@ -48,6 +70,50 @@ fun HomeScreen() {
                         modifier = Modifier.size(50.dp)
                     )
 
+                },
+                actions = {
+                    // Search Icon
+                    IconButton(onClick = { }) {
+                        Icon(
+                            imageVector = Icons.Rounded.Search,
+                            contentDescription = "Search",
+                            tint = Color.Black
+                        )
+                    }
+                    // More Options Icon
+                    IconButton(onClick = { expanded.value = true }) {
+                        Icon(
+                            imageVector = Icons.Rounded.MoreVert,
+                            contentDescription = "More Options",
+                            tint = Color.Black
+                        )
+                    }
+                    // Dropdown Menu
+                    DropdownMenu(
+                        modifier = Modifier.background(Color(0xffFEFBFE)),
+                        expanded = expanded.value,
+                        onDismissRequest = { expanded.value = false }
+                    ) {
+                        DpMenuItem(
+                            expanded = expanded, title = "Saved Cities",
+                            icon = Icons.Rounded.LocationCity
+                        ) {
+                            // Todo
+                        }
+
+                        DpMenuItem(
+                            expanded = expanded, title = "Settings",
+                            icon = Icons.Rounded.Settings
+                        ) {
+                            // Todo
+                        }
+                        DpMenuItem(
+                            expanded = expanded, title = "About",
+                            icon = Icons.Rounded.Info
+                        ) {
+                            // Todo
+                        }
+                    }
                 },
             )
         }
@@ -60,9 +126,9 @@ fun HomeScreen() {
                     end = 18.dp, top = 10.dp
                 )
             ) {
-                HeaderSection(city = "Lagos",date = "Sunday, 8th December, 2024")
+                HeaderSection(city = "Ireland", date = "Sunday, 8th December, 2024")
                 Spacer(modifier = Modifier.height(15.dp))
-                WeatherCard(img = R.drawable.a11n, value = "320", weather = "Cloud")
+                WeatherCard(img = R.drawable.a13d, value = "270", weather = "Snowy")
                 Spacer(modifier = Modifier.height(50.dp))
                 Row {
                     Stats(
