@@ -14,16 +14,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.weatherapp.R
 import com.example.weatherapp.components.SearchCityContent
 import com.example.weatherapp.components.TextInputField
+import com.example.weatherapp.enums.WeatherScreens
 import com.example.weatherapp.widgets.SearchCityAppBar
 import com.example.weatherapp.widgets.SearchCityFloatBTN
 
-@Preview
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchCity() {
+fun SearchCityScreen(navController: NavController) {
     val cityValue = remember {
         mutableStateOf("")
     }
@@ -31,7 +33,9 @@ fun SearchCity() {
     return Scaffold(
         containerColor = Color.White,
         floatingActionButton = {
-            SearchCityFloatBTN(action = {},icon = Icons.Rounded.CloudDone)
+            SearchCityFloatBTN(icon = Icons.Rounded.CloudDone){
+                navController.navigate(route = WeatherScreens.HomeScreen.name)
+            }
         },
         topBar = {
             SearchCityAppBar()
@@ -49,8 +53,8 @@ fun SearchCity() {
 
                 TextInputField(valueState = cityValue)
                 SearchCityContent(
-                    img = R.drawable.not_found,
-                    desc = "Ops! City not found."
+                    img = R.drawable.location,
+                    desc = "Enter city name to search"
                 )
 
             }

@@ -30,12 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.weatherapp.widgets.SearchCityFloatBTN
 
-@Preview
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(navController: NavController) {
     val currentUnit = remember {
         mutableStateOf("Celsius °C")
     }
@@ -48,16 +49,19 @@ fun SettingsScreen() {
         containerColor = Color.White,
         floatingActionButton = {
             if (currentUnit.value != newUnit.value) SearchCityFloatBTN(
-                action = {},
                 icon = Icons.Rounded.Save
-            )
+            ){
+                // Todo
+            }
         },
         topBar = {
             TopAppBar(
                 title = { Text(text = "Settings") },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color.White),
                 navigationIcon = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                             contentDescription = "Back",

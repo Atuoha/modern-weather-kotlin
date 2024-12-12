@@ -27,11 +27,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
-@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutApp() {
+fun AboutAppScreen(navController: NavController) {
     return Scaffold(
         containerColor = Color.White,
 
@@ -40,7 +40,9 @@ fun AboutApp() {
                 title = { Text(text = "About App") },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color.White),
                 navigationIcon = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                             contentDescription = "Back",

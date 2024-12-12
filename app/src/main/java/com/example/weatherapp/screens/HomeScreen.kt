@@ -1,5 +1,4 @@
 package com.example.weatherapp.screens
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.weatherapp.R
 import com.example.weatherapp.components.HeaderSection
 import com.example.weatherapp.components.Intervals
@@ -40,14 +40,13 @@ import com.example.weatherapp.components.OverlaySection
 import com.example.weatherapp.components.Stats
 import com.example.weatherapp.components.WeatherCard
 import com.example.weatherapp.components.DpMenuItem
-
+import com.example.weatherapp.enums.WeatherScreens
 import com.example.weatherapp.model.intervals
 import com.example.weatherapp.widgets.SearchCityFloatBTN
 
-@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     val intervalIndex = remember {
         mutableStateOf(0)
     }
@@ -56,9 +55,10 @@ fun HomeScreen() {
     return Scaffold(
         floatingActionButton = {
             SearchCityFloatBTN(
-                action = {},
                 icon = Icons.Rounded.Save
-            )
+            ){
+                // Todo
+            }
         },
         topBar = {
             TopAppBar(
@@ -73,7 +73,9 @@ fun HomeScreen() {
                 },
                 actions = {
                     // Search Icon
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = {
+                        navController.navigate(route = WeatherScreens.SearchScreen.name)
+                    }) {
                         Icon(
                             imageVector = Icons.Rounded.Search,
                             contentDescription = "Search",
@@ -98,20 +100,20 @@ fun HomeScreen() {
                             expanded = expanded, title = "Saved Cities",
                             icon = Icons.Rounded.LocationCity
                         ) {
-                            // Todo
+                            navController.navigate(route = WeatherScreens.SavedCityScreen.name)
                         }
 
                         DpMenuItem(
                             expanded = expanded, title = "Settings",
                             icon = Icons.Rounded.Settings
                         ) {
-                            // Todo
+                            navController.navigate(route = WeatherScreens.SettingsScreen.name)
                         }
                         DpMenuItem(
                             expanded = expanded, title = "About",
                             icon = Icons.Rounded.Info
                         ) {
-                            // Todo
+                            navController.navigate(route = WeatherScreens.AboutScreen.name)
                         }
                     }
                 },

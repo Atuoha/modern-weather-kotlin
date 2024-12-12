@@ -11,14 +11,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.weatherapp.utils.AppColors
 
 @Composable
-fun SearchCityFloatBTN(action: () -> Unit, icon: ImageVector) {
+fun SearchCityFloatBTN(icon: ImageVector, action: () -> Unit) {
     FloatingActionButton(
         shape = CircleShape,
         containerColor = AppColors.primaryColor,
         onClick = { action() }) {
 
         Icon(
-            imageVector =icon ,
+            imageVector = icon,
             contentDescription = "Icon",
             tint = Color.White
         )
