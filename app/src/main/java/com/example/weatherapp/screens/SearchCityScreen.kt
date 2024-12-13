@@ -12,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.weatherapp.R
@@ -30,10 +29,23 @@ fun SearchCityScreen(navController: NavController) {
         mutableStateOf("")
     }
 
+    val error = false
+    val responseImage = remember {
+        mutableStateOf(R.drawable.location)
+    }
+    val msg =
+        remember {
+            mutableStateOf("Search by entering the name of the city")
+        }
+
+    val isLoading = remember {
+        mutableStateOf(false)
+    }
+
     return Scaffold(
         containerColor = Color.White,
         floatingActionButton = {
-            SearchCityFloatBTN(icon = Icons.Rounded.CloudDone){
+            SearchCityFloatBTN(icon = Icons.Rounded.CloudDone) {
                 navController.navigate(route = WeatherScreens.HomeScreen.name)
             }
         },
@@ -53,8 +65,8 @@ fun SearchCityScreen(navController: NavController) {
 
                 TextInputField(valueState = cityValue)
                 SearchCityContent(
-                    img = R.drawable.location,
-                    desc = "Enter city name to search"
+                    img = responseImage.value,
+                    desc = msg.value
                 )
 
             }

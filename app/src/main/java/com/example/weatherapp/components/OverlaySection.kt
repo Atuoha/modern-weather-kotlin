@@ -19,10 +19,10 @@ import com.example.weatherapp.utils.AppColors
 
 
 @Composable
-fun OverlaySection() {
+fun OverlaySection(image:Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
-            painter = painterResource(id = R.drawable.a11n),
+            painter = painterResource(id = image),
             contentDescription = "Image",
             modifier = Modifier
                 .size(20.dp)

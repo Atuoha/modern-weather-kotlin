@@ -1,4 +1,6 @@
 package com.example.weatherapp.screens
+
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,7 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.LocationCity
@@ -29,8 +31,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.weatherapp.R
@@ -41,12 +43,16 @@ import com.example.weatherapp.components.Stats
 import com.example.weatherapp.components.WeatherCard
 import com.example.weatherapp.components.DpMenuItem
 import com.example.weatherapp.enums.WeatherScreens
-import com.example.weatherapp.model.intervals
+import com.example.weatherapp.model.weather.dummyWeather
+import com.example.weatherapp.utils.extensions.currentDate
 import com.example.weatherapp.widgets.SearchCityFloatBTN
 
+@SuppressLint("DiscouragedApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
+    val context = LocalContext.current
+
     val intervalIndex = remember {
         mutableStateOf(0)
     }
@@ -56,7 +62,7 @@ fun HomeScreen(navController: NavController) {
         floatingActionButton = {
             SearchCityFloatBTN(
                 icon = Icons.Rounded.Save
-            ){
+            ) {
                 // Todo
             }
         },
@@ -128,25 +134,41 @@ fun HomeScreen(navController: NavController) {
                     end = 18.dp, top = 10.dp
                 )
             ) {
-                HeaderSection(city = "Ireland", date = "Sunday, 8th December, 2024")
+                val weather = dummyWeather.list[0]
+
+                val icon = weather.weather[0].icon
+                val weatherIcon = "a${icon}"
+                val drawableId =
+                    context.resources.getIdentifier(weatherIcon, "drawable", context.packageName)
+
+
+                HeaderSection(
+                    city = dummyWeather.city.name,
+                    country = dummyWeather.city.country,
+                    date = currentDate(),
+                )
                 Spacer(modifier = Modifier.height(15.dp))
-                WeatherCard(img = R.drawable.a13d, value = "270", weather = "Snowy")
+                WeatherCard(
+                    img = drawableId,
+                    value = String.format("%.0f", weather.main.temp),
+                    weather = weather.weather[0].main,
+                )
                 Spacer(modifier = Modifier.height(50.dp))
                 Row {
                     Stats(
-                        title = "Min Temp", value = "304.1",
+                        title = "Min Temp", value = weather.main.temp_min.toString(),
                         deg = "C", img = R.drawable.sleet
                     )
                     Stats(
-                        title = "Humidity", value = "504.1",
+                        title = "Humidity", value = weather.main.humidity.toString(),
                         img = R.drawable.humidity
                     )
                     Stats(
-                        title = "Max Temp", value = "504.1",
+                        title = "Max Temp", value = weather.main.temp_max.toString(),
                         deg = "C", img = R.drawable.maxtemp
                     )
                     Stats(
-                        title = "Wind Speed", value = "104.1",
+                        title = "Wind Speed", value = weather.wind.speed.toString(),
                         img = R.drawable.windspeed,
                         deg = "km\\h",
                     )
@@ -154,18 +176,32 @@ fun HomeScreen(navController: NavController) {
 
                 }
                 Spacer(modifier = Modifier.height(30.dp))
-                OverlaySection()
+                OverlaySection(image = drawableId)
                 Spacer(modifier = Modifier.height(10.dp))
                 LazyRow {
-                    items(intervals) { interval ->
+                    itemsIndexed(dummyWeather.list) { index, weatherInfo ->
                         Box(modifier = Modifier.clickable {
-                            intervalIndex.value = interval.id.toInt()
+                            intervalIndex.value = index
                         }) {
+                            val dateTime = weatherInfo.dt_txt
+                            val parts = dateTime.split(" ")
+                            val date = parts[0]
+                            val time = parts[1]
+
+
+                            val intervalIcon = weatherInfo.weather[0].icon
+                            val intervalWeatherIcon = "a${intervalIcon}"
+                            val intervalDrawId = context.resources.getIdentifier(
+                                intervalWeatherIcon,
+                                "drawable",
+                                context.packageName
+                            )
+
                             Intervals(
-                                title = interval.title, date = interval.date,
-                                time = interval.time, img = interval.img,
+                                title = weatherInfo.weather[0].main, date = date,
+                                time = time, img = intervalDrawId,
                                 currentIndex = intervalIndex,
-                                index = interval.id.toInt(),
+                                index = index,
                             )
                         }
                     }

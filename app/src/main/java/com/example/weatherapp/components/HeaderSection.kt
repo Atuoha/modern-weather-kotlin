@@ -19,7 +19,7 @@ import com.example.weatherapp.utils.AppColors
 
 
 @Composable
-fun HeaderSection(city:String,date:String) {
+fun HeaderSection(city: String, date: String, country: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
             imageVector = Icons.Rounded.LocationOn,
@@ -32,7 +32,15 @@ fun HeaderSection(city:String,date:String) {
             text = city,
             style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium)
         )
-
+        Spacer(modifier = Modifier.width(5.dp))
+        Text(
+            text = country,
+            style = TextStyle(
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Medium,
+                color = AppColors.statsTitleColor,
+            )
+        )
     }
 
     Spacer(modifier = Modifier.height(5.dp))
