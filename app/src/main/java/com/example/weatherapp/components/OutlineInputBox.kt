@@ -1,6 +1,6 @@
 package com.example.weatherapp.components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import com.example.weatherapp.utils.AppColors
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,6 +33,7 @@ fun TextInputField(
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Search,
     onAction: KeyboardActions = KeyboardActions.Default,
+    searchAction: ()->Unit,
 ) {
     return OutlinedTextField(
         value = valueState.value,
@@ -72,6 +73,7 @@ fun TextInputField(
         },
         trailingIcon = {
             Icon(
+                modifier = Modifier.clickable { searchAction() },
                 imageVector = Icons.Rounded.Search,
                 contentDescription = "Icon",
                 tint = AppColors.primaryColor,

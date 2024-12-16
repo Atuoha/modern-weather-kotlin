@@ -18,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.weatherapp.components.CityListTile
@@ -30,11 +29,11 @@ import com.example.weatherapp.model.CityWeather
 @Composable
 fun SavedCitiesScreen(navController: NavController) {
     val cities = listOf(
-        CityWeather(city = "New York", initial = "NY", weather = "Sunny"),
-        CityWeather(city = "Los Angeles", initial = "LA", weather = "Cloudy"),
-        CityWeather(city = "Chicago", initial = "CHI", weather = "Windy"),
-        CityWeather(city = "Houston", initial = "HOU", weather = "Rainy"),
-        CityWeather(city = "San Francisco", initial = "SF", weather = "Foggy")
+        CityWeather(city = "Lagos", country = "NG", weather = "Sunny"),
+        CityWeather(city = "Dublin", country = "IE", weather = "Cloudy"),
+        CityWeather(city = "Chicago", country = "US", weather = "Windy"),
+        CityWeather(city = "Nairobi", country = "KY", weather = "Rainy"),
+        CityWeather(city = "San Francisco", country = "US", weather = "Foggy")
     )
 
     val showDeleteDialog = remember {
@@ -76,7 +75,7 @@ fun SavedCitiesScreen(navController: NavController) {
                     )
             ) {
                 items(cities) { city ->
-                    CityListTile(city = city.city, initial = city.initial, weather = city.weather) {
+                    CityListTile(city = city.city, initial = city.country, weather = city.weather) {
                         showDeleteDialog.value = true
                         cityToDelete.value = city
                     }

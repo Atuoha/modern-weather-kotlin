@@ -43,14 +43,14 @@ import com.example.weatherapp.components.Stats
 import com.example.weatherapp.components.WeatherCard
 import com.example.weatherapp.components.DpMenuItem
 import com.example.weatherapp.enums.WeatherScreens
-import com.example.weatherapp.model.weather.dummyWeather
+import com.example.weatherapp.model.weather.Weather
 import com.example.weatherapp.utils.extensions.currentDate
 import com.example.weatherapp.widgets.SearchCityFloatBTN
 
 @SuppressLint("DiscouragedApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, weather: Weather) {
     val context = LocalContext.current
 
     val intervalIndex = remember {
@@ -134,41 +134,44 @@ fun HomeScreen(navController: NavController) {
                     end = 18.dp, top = 10.dp
                 )
             ) {
-                val weather = dummyWeather.list[0]
+                val weatherData = weather.list[0]
 
-                val icon = weather.weather[0].icon
+                val icon = weatherData.weather[0].icon
                 val weatherIcon = "a${icon}"
                 val drawableId =
-                    context.resources.getIdentifier(weatherIcon, "drawable", context.packageName)
+                    context.resources.getIdentifier(
+                        weatherIcon,
+                        "drawable", context.packageName
+                    )
 
 
                 HeaderSection(
-                    city = dummyWeather.city.name,
-                    country = dummyWeather.city.country,
+                    city = weather.city.name,
+                    country = weather.city.country,
                     date = currentDate(),
                 )
                 Spacer(modifier = Modifier.height(15.dp))
                 WeatherCard(
                     img = drawableId,
-                    value = String.format("%.0f", weather.main.temp),
-                    weather = weather.weather[0].main,
+                    value = String.format("%.0f", weatherData.main.temp),
+                    weather = weatherData.weather[0].main,
                 )
                 Spacer(modifier = Modifier.height(50.dp))
                 Row {
                     Stats(
-                        title = "Min Temp", value = weather.main.temp_min.toString(),
+                        title = "Min Temp", value = weatherData.main.temp_min.toString(),
                         deg = "C", img = R.drawable.sleet
                     )
                     Stats(
-                        title = "Humidity", value = weather.main.humidity.toString(),
+                        title = "Humidity", value = weatherData.main.humidity.toString(),
                         img = R.drawable.humidity
                     )
                     Stats(
-                        title = "Max Temp", value = weather.main.temp_max.toString(),
+                        title = "Max Temp", value = weatherData.main.temp_max.toString(),
                         deg = "C", img = R.drawable.maxtemp
                     )
                     Stats(
-                        title = "Wind Speed", value = weather.wind.speed.toString(),
+                        title = "Wind Speed", value = weatherData.wind.speed.toString(),
                         img = R.drawable.windspeed,
                         deg = "km\\h",
                     )
@@ -179,7 +182,7 @@ fun HomeScreen(navController: NavController) {
                 OverlaySection(image = drawableId)
                 Spacer(modifier = Modifier.height(10.dp))
                 LazyRow {
-                    itemsIndexed(dummyWeather.list) { index, weatherInfo ->
+                    itemsIndexed(weather.list) { index, weatherInfo ->
                         Box(modifier = Modifier.clickable {
                             intervalIndex.value = index
                         }) {
