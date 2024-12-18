@@ -10,13 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
 fun CityList(
     cities: State<List<CityWeather>>,
+    navController: NavController,
     confirmDelete: (cityWeather: CityWeather) -> Unit
 ) {
-
     LazyColumn(
         modifier = Modifier
             .padding(
@@ -24,10 +25,10 @@ fun CityList(
                 end = 18.dp
             )
     ) {
-
         items(cities.value.reversed()) { city ->
             CityListTile(
-                cityWeather = city
+                cityWeather = city,
+                navController = navController,
             ) {
                 confirmDelete(city)
             }

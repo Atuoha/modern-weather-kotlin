@@ -25,11 +25,8 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
 
     private val data: MutableState<DataOrException<Weather, Boolean, Exception>> =
         mutableStateOf(DataOrException())
-
     val weather: State<DataOrException<Weather, Boolean, Exception>> = data
-
     private var _cityWeathers = MutableStateFlow<List<CityWeather>>(emptyList())
-
     var cityWeathers = _cityWeathers.asStateFlow()
 
     init {
@@ -48,8 +45,6 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
 
 
     val cityToDelete = mutableStateOf<CityWeather?>(null)
-
-
     val showDeleteDialog = mutableStateOf(false)
     private val toastMessage = mutableStateOf<String?>(null)
 
@@ -71,7 +66,6 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
         }
         showDeleteDialog.value = false
         toastMessage.value = "City deleted successfully"
-        Log.d("TOAST", "Toast message set: City deleted successfully")
     }
 
     // confirm edit

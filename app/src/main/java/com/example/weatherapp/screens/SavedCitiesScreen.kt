@@ -77,7 +77,10 @@ fun SavedCitiesScreen(
 
         Box(modifier = Modifier.padding(paddingValue)) {
             if (viewModel.cityWeathers.value.isNotEmpty())
-                CityList(cities = viewModel.cityWeathers.collectAsState()) {
+                CityList(
+                    cities = viewModel.cityWeathers.collectAsState(),
+                    navController = navController
+                ) {
                     viewModel.confirmDelete(it)
                 }
             else
