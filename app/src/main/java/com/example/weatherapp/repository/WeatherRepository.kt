@@ -1,12 +1,21 @@
 package com.example.weatherapp.repository
 
 import android.util.Log
+import com.example.weatherapp.data.CityDatabaseDAO
 import com.example.weatherapp.data.DataOrException
+import com.example.weatherapp.model.CityWeather
 import com.example.weatherapp.model.weather.Weather
 import com.example.weatherapp.network.WeatherApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class WeatherRepository @Inject constructor(private val weatherApi: WeatherApi) {
+class WeatherRepository @Inject constructor(
+    private val weatherApi: WeatherApi,
+    private val cityDatabaseDAO: CityDatabaseDAO
+) {
 
     private val dataOrException = DataOrException<Weather, Boolean, Exception>()
 
@@ -34,4 +43,16 @@ class WeatherRepository @Inject constructor(private val weatherApi: WeatherApi) 
 
         return dataOrException
     }
+
+
+
+    // DATABASE
+    fun getCities(): Flow<List<CityWeather>> =
+        cityDatabaseDAO.getCities().flowOn(Dispatchers.IO).conflate()
+
+
+    suspend fun addCity(city: CityWeather) = cityDatabaseDAO.createCity(city)
+    suspend fun deleteCity(city: CityWeather) = cityDatabaseDAO.deleteCity(city)
+
+    suspend fun deleteAllCities() = cityDatabaseDAO.deleteAllCities()
 }

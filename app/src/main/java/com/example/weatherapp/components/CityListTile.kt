@@ -29,14 +29,22 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.model.CityWeather
 import com.example.weatherapp.utils.AppColors
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun CityListTile(
-    city: String, initial: String,
-    weather: String, deleteFnc: () -> Unit
+    cityWeather: CityWeather, confirmDelete: (cityWeather: CityWeather) -> Unit
 ) {
-
+    val formatter = DateTimeFormatter.ofPattern("E, d, MMM", Locale.ENGLISH)
+    val formattedDate = Instant.ofEpochMilli(cityWeather.date.time)
+        .atZone(ZoneId.systemDefault())
+        .format(formatter)
 
     Box(
         modifier = Modifier
@@ -63,12 +71,12 @@ fun CityListTile(
                         contentAlignment = Alignment.Center, modifier = Modifier.padding(8.dp)
                     ) {
                         Text(
-                            text = initial,
+                            text = cityWeather.country,
                             modifier = Modifier
                                 .align(Alignment.Center)
                                 .padding(
                                     top = 8.dp,
-                                    start = if (initial.length > 2) 0.dp else 5.dp
+                                    start = if (cityWeather.country.length > 2) 0.dp else 5.dp
                                 ),
                             style = TextStyle(color = AppColors.primaryColor)
                         )
@@ -77,11 +85,17 @@ fun CityListTile(
                 Spacer(modifier = Modifier.width(15.dp))
                 Column {
                     Text(
-                        text = city, style = TextStyle(fontWeight = FontWeight.Black)
+                        text = cityWeather.city, style = TextStyle(fontWeight = FontWeight.Black)
                     )
                     Spacer(modifier = Modifier.height(5.dp))
                     Text(
-                        text = weather, style = TextStyle(fontSize = 12.sp)
+                        text = cityWeather.weather, style = TextStyle(fontSize = 12.sp)
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Text(
+                        text = formattedDate, style = TextStyle(
+                            fontSize = 13.sp
+                        )
                     )
                 }
             }
@@ -92,7 +106,7 @@ fun CityListTile(
                 modifier = Modifier
                     .size(22.dp)
                     .clickable {
-                        deleteFnc()
+                        confirmDelete(cityWeather)
                     },
             )
         }

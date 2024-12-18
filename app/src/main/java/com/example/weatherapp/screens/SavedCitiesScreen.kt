@@ -1,11 +1,16 @@
 package com.example.weatherapp.screens
 
+import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -14,34 +19,37 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.weatherapp.components.CityListTile
+import com.example.weatherapp.R
+import com.example.weatherapp.components.CityList
 import com.example.weatherapp.components.ConfirmDeleteDialog
-import com.example.weatherapp.model.CityWeather
+import com.example.weatherapp.view_model.WeatherViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SavedCitiesScreen(navController: NavController) {
-    val cities = listOf(
-        CityWeather(city = "Lagos", country = "NG", weather = "Sunny"),
-        CityWeather(city = "Dublin", country = "IE", weather = "Cloudy"),
-        CityWeather(city = "Chicago", country = "US", weather = "Windy"),
-        CityWeather(city = "Nairobi", country = "KY", weather = "Rainy"),
-        CityWeather(city = "San Francisco", country = "US", weather = "Foggy")
-    )
+fun SavedCitiesScreen(
+    navController: NavController,
+    viewModel: WeatherViewModel = hiltViewModel(),
+) {
 
-    val showDeleteDialog = remember {
-        mutableStateOf(false)
-    }
+    val context = LocalContext.current
 
-    val cityToDelete = remember {
-        mutableStateOf<CityWeather?>(null)
+    LaunchedEffect(viewModel.getToastMessage()) {
+        viewModel.getToastMessage()?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            viewModel.setToastMessage()
+        }
     }
 
     return Scaffold(
@@ -66,32 +74,36 @@ fun SavedCitiesScreen(navController: NavController) {
         }
     ) { paddingValue ->
 
+
         Box(modifier = Modifier.padding(paddingValue)) {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(
-                        start = 18.dp,
-                        end = 18.dp
-                    )
-            ) {
-                items(cities) { city ->
-                    CityListTile(city = city.city, initial = city.country, weather = city.weather) {
-                        showDeleteDialog.value = true
-                        cityToDelete.value = city
-                    }
-
+            if (viewModel.cityWeathers.value.isNotEmpty())
+                CityList(cities = viewModel.cityWeathers.collectAsState()) {
+                    viewModel.confirmDelete(it)
                 }
-            }
-
-
+            else
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.opps),
+                        contentDescription = "Image"
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = "Opps! No note found.",
+                        style = TextStyle(color = Color.LightGray),
+                    )
+                }
 
         }
-        if (showDeleteDialog.value) {
+        if (viewModel.showDeleteDialog.value) {
             ConfirmDeleteDialog(
-                showDeleteDialog,
-                cityToDelete,
+                viewModel.showDeleteDialog,
+                viewModel.cityToDelete,
                 deleteCity = {
-
+                    viewModel.deleteCity()
                 }
             )
         }

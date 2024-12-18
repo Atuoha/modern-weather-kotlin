@@ -1,5 +1,4 @@
 package com.example.weatherapp.navigation
-
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -19,6 +18,8 @@ import com.google.gson.Gson
 @Composable
 fun WeatherNavigation() {
     val navController = rememberNavController()
+
+
 
     NavHost(navController = navController, startDestination = WeatherScreens.SplashScreen.name) {
         composable(WeatherScreens.SplashScreen.name) {

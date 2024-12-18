@@ -1,6 +1,7 @@
 package com.example.weatherapp.screens
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +28,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -34,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.weatherapp.R
 import com.example.weatherapp.components.HeaderSection
@@ -43,15 +46,29 @@ import com.example.weatherapp.components.Stats
 import com.example.weatherapp.components.WeatherCard
 import com.example.weatherapp.components.DpMenuItem
 import com.example.weatherapp.enums.WeatherScreens
+import com.example.weatherapp.model.CityWeather
 import com.example.weatherapp.model.weather.Weather
 import com.example.weatherapp.utils.extensions.currentDate
+import com.example.weatherapp.view_model.WeatherViewModel
 import com.example.weatherapp.widgets.SearchCityFloatBTN
 
 @SuppressLint("DiscouragedApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, weather: Weather) {
+fun HomeScreen(
+    navController: NavController,
+    weather: Weather,
+    viewModel: WeatherViewModel = hiltViewModel(),
+) {
     val context = LocalContext.current
+
+    LaunchedEffect(viewModel.getToastMessage()) {
+        viewModel.getToastMessage()?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            viewModel.setToastMessage()
+        }
+    }
+
 
     val intervalIndex = remember {
         mutableStateOf(0)
@@ -63,7 +80,13 @@ fun HomeScreen(navController: NavController, weather: Weather) {
             SearchCityFloatBTN(
                 icon = Icons.Rounded.Save
             ) {
-                // Todo
+                viewModel.saveCity(
+                    CityWeather(
+                        city = weather.city.name,
+                        country = weather.city.country,
+                        weather = weather.list[0].weather[0].main,
+                    ),
+                )
             }
         },
         topBar = {
