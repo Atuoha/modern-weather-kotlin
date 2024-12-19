@@ -89,7 +89,7 @@ fun SearchCityScreen(
             }
         },
         topBar = {
-            SearchCityAppBar()
+            SearchCityAppBar(navController = navController)
         }
     ) { paddingValue ->
 

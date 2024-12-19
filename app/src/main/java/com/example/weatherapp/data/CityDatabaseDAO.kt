@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.weatherapp.model.CityWeather
+import com.example.weatherapp.model.MeasureUnit
 
 @Dao
 interface CityDatabaseDAO {
@@ -29,4 +30,18 @@ interface CityDatabaseDAO {
 
     @Query("DELETE FROM ${AppStrings.CITY_TABLE}")
     suspend fun deleteAllCities()
+
+ // unit
+
+    @Query("SELECT * FROM ${AppStrings.UNIT_TABLE}")
+    fun getUnit(): Flow<MeasureUnit>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveUnit(unit: MeasureUnit)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateUnit(unit: MeasureUnit)
+
+    @Delete
+    suspend fun deleteUnit(unit: MeasureUnit)
 }

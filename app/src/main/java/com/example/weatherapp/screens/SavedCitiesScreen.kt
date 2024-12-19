@@ -8,7 +8,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -33,22 +33,23 @@ import androidx.navigation.NavController
 import com.example.weatherapp.R
 import com.example.weatherapp.components.CityList
 import com.example.weatherapp.components.ConfirmDeleteDialog
-import com.example.weatherapp.view_model.WeatherViewModel
+import com.example.weatherapp.view_model.CityWeatherViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SavedCitiesScreen(
     navController: NavController,
-    viewModel: WeatherViewModel = hiltViewModel(),
+    cityWeatherViewModel: CityWeatherViewModel = hiltViewModel()
+
 ) {
 
     val context = LocalContext.current
 
-    LaunchedEffect(viewModel.getToastMessage()) {
-        viewModel.getToastMessage()?.let { message ->
+    LaunchedEffect(cityWeatherViewModel.getToastMessage()) {
+        cityWeatherViewModel.getToastMessage()?.let { message ->
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-            viewModel.setToastMessage()
+            cityWeatherViewModel.setToastMessage()
         }
     }
 
@@ -76,18 +77,18 @@ fun SavedCitiesScreen(
 
 
         Box(modifier = Modifier.padding(paddingValue)) {
-            if (viewModel.cityWeathers.value.isNotEmpty())
+            if (cityWeatherViewModel.cityWeathers.value.isNotEmpty())
                 CityList(
-                    cities = viewModel.cityWeathers.collectAsState(),
+                    cities = cityWeatherViewModel.cityWeathers.collectAsState(),
                     navController = navController
                 ) {
-                    viewModel.confirmDelete(it)
+                    cityWeatherViewModel.confirmDelete(it)
                 }
             else
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.opps),
@@ -95,18 +96,18 @@ fun SavedCitiesScreen(
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        text = "Opps! No note found.",
+                        text = "Ops! No city found.",
                         style = TextStyle(color = Color.LightGray),
                     )
                 }
 
         }
-        if (viewModel.showDeleteDialog.value) {
+        if (cityWeatherViewModel.showDeleteDialog.value) {
             ConfirmDeleteDialog(
-                viewModel.showDeleteDialog,
-                viewModel.cityToDelete,
+                cityWeatherViewModel.showDeleteDialog,
+                cityWeatherViewModel.cityToDelete,
                 deleteCity = {
-                    viewModel.deleteCity()
+                    cityWeatherViewModel.deleteCity()
                 }
             )
         }

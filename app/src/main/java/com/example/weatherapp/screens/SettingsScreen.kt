@@ -1,5 +1,6 @@
 package com.example.weatherapp.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -24,34 +25,58 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.weatherapp.model.MeasureUnit
+import com.example.weatherapp.view_model.SettingsViewModel
 import com.example.weatherapp.widgets.SearchCityFloatBTN
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavController) {
-    val currentUnit = remember {
-        mutableStateOf("Celsius °C")
-    }
+fun SettingsScreen(navController: NavController, viewModel:SettingsViewModel = hiltViewModel()) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val currentData by viewModel.data.collectAsState()
 
-    val newUnit = remember {
-        mutableStateOf(currentUnit.value)
+
+    LaunchedEffect(viewModel.getToastMessage()) {
+        viewModel.getToastMessage()?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            viewModel.setToastMessage()
+        }
+
+
+    }
+    val newUnit = remember { mutableStateOf("") }
+
+
+    LaunchedEffect(currentData){
+        newUnit.value = currentData.unit
     }
 
     return Scaffold(
         containerColor = Color.White,
         floatingActionButton = {
-            if (currentUnit.value != newUnit.value) SearchCityFloatBTN(
+            if (currentData.unit != newUnit.value) SearchCityFloatBTN(
                 icon = Icons.Rounded.Save
             ){
-                // Todo
+                scope.launch {
+                    viewModel.deleteUnit(MeasureUnit(unit = currentData.unit))
+                    viewModel.saveUnit(MeasureUnit(unit = newUnit.value))
+
+                }
             }
         },
         topBar = {
@@ -96,10 +121,10 @@ fun SettingsScreen(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Button(onClick = {
-                    if (newUnit.value == "Celsius °C") {
-                        newUnit.value = "Fahrenheit °F"
+                    newUnit.value = if (newUnit.value == "Celsius °C") {
+                        "Fahrenheit °F"
                     } else {
-                        newUnit.value = "Celsius °C"
+                        "Celsius °C"
                     }
                 }) {
                     Text(

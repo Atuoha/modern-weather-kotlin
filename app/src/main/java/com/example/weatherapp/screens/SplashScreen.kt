@@ -1,7 +1,6 @@
 package com.example.weatherapp.screens
 
 import android.view.animation.OvershootInterpolator
-import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import com.example.weatherapp.R
 import androidx.compose.foundation.Image
@@ -32,7 +31,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.weatherapp.enums.WeatherScreens

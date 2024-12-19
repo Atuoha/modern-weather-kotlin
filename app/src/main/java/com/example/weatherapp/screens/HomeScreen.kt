@@ -29,6 +29,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -49,7 +50,7 @@ import com.example.weatherapp.enums.WeatherScreens
 import com.example.weatherapp.model.CityWeather
 import com.example.weatherapp.model.weather.Weather
 import com.example.weatherapp.utils.extensions.currentDate
-import com.example.weatherapp.view_model.WeatherViewModel
+import com.example.weatherapp.view_model.CityWeatherViewModel
 import com.example.weatherapp.widgets.SearchCityFloatBTN
 
 @SuppressLint("DiscouragedApi")
@@ -58,14 +59,14 @@ import com.example.weatherapp.widgets.SearchCityFloatBTN
 fun HomeScreen(
     navController: NavController,
     weather: Weather,
-    viewModel: WeatherViewModel = hiltViewModel(),
+    cityWeatherViewModel: CityWeatherViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
-    LaunchedEffect(viewModel.getToastMessage()) {
-        viewModel.getToastMessage()?.let { message ->
+    LaunchedEffect(cityWeatherViewModel.getToastMessage()) {
+        cityWeatherViewModel.getToastMessage()?.let { message ->
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-            viewModel.setToastMessage()
+            cityWeatherViewModel.setToastMessage()
         }
     }
 
@@ -75,12 +76,17 @@ fun HomeScreen(
     }
     val expanded = remember { mutableStateOf(false) }
 
+    val alreadySaved = cityWeatherViewModel.cityWeathers.collectAsState().value.any { data ->
+        weather.city.name == data.city
+    }
+
+
     return Scaffold(
-        floatingActionButton = {
-            SearchCityFloatBTN(
+       floatingActionButton = {
+           if(!alreadySaved) SearchCityFloatBTN(
                 icon = Icons.Rounded.Save
             ) {
-                viewModel.saveCity(
+               cityWeatherViewModel.saveCity(
                     CityWeather(
                         city = weather.city.name,
                         country = weather.city.country,

@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.weatherapp.data.CityDatabaseDAO
 import com.example.weatherapp.data.DataOrException
 import com.example.weatherapp.model.CityWeather
+import com.example.weatherapp.model.MeasureUnit
 import com.example.weatherapp.model.weather.Weather
 import com.example.weatherapp.network.WeatherApi
 import kotlinx.coroutines.Dispatchers
@@ -50,9 +51,19 @@ class WeatherRepository @Inject constructor(
     fun getCities(): Flow<List<CityWeather>> =
         cityDatabaseDAO.getCities().flowOn(Dispatchers.IO).conflate()
 
-
     suspend fun addCity(city: CityWeather) = cityDatabaseDAO.createCity(city)
     suspend fun deleteCity(city: CityWeather) = cityDatabaseDAO.deleteCity(city)
 
     suspend fun deleteAllCities() = cityDatabaseDAO.deleteAllCities()
+
+
+    // unit
+    fun getUnit(): Flow<MeasureUnit> = cityDatabaseDAO.getUnit().flowOn(Dispatchers.IO).conflate()
+
+    suspend fun saveUnit(unit:MeasureUnit)= cityDatabaseDAO.saveUnit(unit)
+
+    suspend fun updateUnit(unit: MeasureUnit) = cityDatabaseDAO.updateUnit(unit)
+
+    suspend fun deleteUnit(unit: MeasureUnit) = cityDatabaseDAO.deleteUnit(unit)
+
 }
