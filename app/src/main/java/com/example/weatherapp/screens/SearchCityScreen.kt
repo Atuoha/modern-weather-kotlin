@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CloudDone
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,6 +27,7 @@ import com.example.weatherapp.components.SearchCityContent
 import com.example.weatherapp.components.TextInputField
 import com.example.weatherapp.enums.WeatherScreens
 import com.example.weatherapp.utils.helpers.LottieLoadingAnimation
+import com.example.weatherapp.view_model.SettingsViewModel
 import com.example.weatherapp.view_model.WeatherViewModel
 import com.example.weatherapp.widgets.SearchCityAppBar
 import com.example.weatherapp.widgets.SearchCityFloatBTN
@@ -33,8 +37,17 @@ import com.google.gson.Gson
 @Composable
 fun SearchCityScreen(
     navController: NavController,
-    viewModel: WeatherViewModel = hiltViewModel()
+    viewModel: WeatherViewModel = hiltViewModel(),
+    settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
+    val currentData by settingsViewModel.data.collectAsState()
+
+    val unit = remember { mutableStateOf("") }
+
+    LaunchedEffect(currentData){
+         unit.value = if (currentData.unit == "Celsius °C") "metrics" else "imperial"
+    }
+
     val focusManager = LocalFocusManager.current
     val weather = viewModel.weather.value
     val weatherFound = remember {
@@ -101,9 +114,8 @@ fun SearchCityScreen(
                     end = 18.dp
                 )
             ) {
-
                 TextInputField(valueState = cityValue) {
-                    viewModel.getWeather(cityValue.value)
+                    viewModel.getWeather(cityValue.value,unit.value)
                     focusManager.clearFocus()
                 }
                 if (weather.loading == true) {

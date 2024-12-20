@@ -21,12 +21,12 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
         mutableStateOf(DataOrException())
     val weather: State<DataOrException<Weather, Boolean, Exception>> = data
 
-    fun getWeather(city: String) {
+    fun getWeather(city: String,units:String) {
         viewModelScope.launch {
             data.value = DataOrException(loading = true)
             Log.d("WeatherViewModel", "Loading weather for $city...")
             try {
-                val weatherResponse = weatherRepository.getWeather(city = city)
+                val weatherResponse = weatherRepository.getWeather(city = city,units=units)
                 if (weatherResponse.data?.cod == "200") {
                     data.value = DataOrException(data = weatherResponse.data, loading = false)
                     Log.d("Weather Data", "Data: Data from weather ${weatherResponse.data}")

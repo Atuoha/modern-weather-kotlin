@@ -20,13 +20,13 @@ class WeatherRepository @Inject constructor(
 
     private val dataOrException = DataOrException<Weather, Boolean, Exception>()
 
-    suspend fun getWeather(city: String): DataOrException<Weather, Boolean, Exception> {
+    suspend fun getWeather(city: String,units:String): DataOrException<Weather, Boolean, Exception> {
         dataOrException.data = null
         dataOrException.error = null
         dataOrException.loading = true
 
         try {
-            val weatherResponse = weatherApi.getWeather(city = city)
+            val weatherResponse = weatherApi.getWeather(city = city,units = units)
             if (weatherResponse.cod == "200") {
                 dataOrException.data = weatherResponse
             } else {

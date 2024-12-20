@@ -56,8 +56,6 @@ fun SettingsScreen(navController: NavController, viewModel:SettingsViewModel = h
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             viewModel.setToastMessage()
         }
-
-
     }
     val newUnit = remember { mutableStateOf("") }
 
